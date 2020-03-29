@@ -44,8 +44,7 @@ const App: () => React$Node = () => {
     contentProvider.query(
       url,
       msg => console.log(msg),
-      (title, published, updated, content) =>
-        console.log('data', title + published + updated + content),
+      arr => console.log('data', arr),
     );
   }, []);
   return (

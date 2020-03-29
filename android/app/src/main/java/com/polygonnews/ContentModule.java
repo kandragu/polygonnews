@@ -9,6 +9,10 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.facebook.react.uimanager.PixelUtil;
 
@@ -56,16 +60,24 @@ public class ContentModule extends ReactContextBaseJavaModule {
                 //String [] col = {"_ID","title","published","updated","content"};
                 Cursor cursor = reactContext.getContentResolver().query(uri, null, null, null, null);
                 String title = null;
-                if (cursor.moveToLast()) {
+                WritableArray array = new WritableNativeArray();
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    WritableMap map = new WritableNativeMap();
                     title = cursor.getString(cursor.getColumnIndex("title"));
+                    map.putString("title", title);
                     String published = cursor.getString(cursor.getColumnIndex("published"));
+                    map.putString("published", published);
                     String updated = cursor.getString(cursor.getColumnIndex("updated"));
+                    map.putString("updated", updated);
                     String content = cursor.getString(cursor.getColumnIndex("content"));
-                    successCallback.invoke(title,published,updated,content);
-                }
-                else
-                    title = "Access denied";
+                    map.putString("content", content);
+                    //successCallback.invoke(title,published,updated,content);
 
+                    array.pushMap(map);
+                    cursor.moveToNext();
+                }
+                successCallback.invoke(array);
                 cursor.close();
             }
             catch (IllegalArgumentException ignored) {
