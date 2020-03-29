@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -24,7 +24,30 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import {NativeModules} from 'react-native';
+let contentProvider = NativeModules.ContentProvider;
+
 const App: () => React$Node = () => {
+  useEffect(() => {
+    /* contentProvider.measureLayout(
+      100,
+      100,
+      msg => {
+        console.log(msg);
+      },
+      (x, y, width, height) => {
+        console.log(x + ':' + y + ':' + width + ':' + height);
+      },
+    ); */
+    let url =
+      'content://com.bestgoodmove.polygondownloader.workermanager.provider.DataProvider/t1';
+    contentProvider.query(
+      url,
+      msg => console.log(msg),
+      (title, published, updated, content) =>
+        console.log('data', title + published + updated + content),
+    );
+  }, []);
   return (
     <>
       <StatusBar barStyle="dark-content" />
