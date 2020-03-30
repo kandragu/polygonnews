@@ -72,6 +72,8 @@ public class ContentModule extends ReactContextBaseJavaModule {
                     map.putString("updated", updated);
                     String content = cursor.getString(cursor.getColumnIndex("content"));
                     map.putString("content", content);
+                    String id = cursor.getString(cursor.getColumnIndex("_id"));
+                    map.putString("id", id);
                     //successCallback.invoke(title,published,updated,content);
 
                     array.pushMap(map);
