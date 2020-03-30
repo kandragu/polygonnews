@@ -32,19 +32,19 @@ export default () => {
     );
   }, []);
 
-  function CardView({id, title, content, selected, onSelect}) {
+  function CardView({id, title, content, updated, selected, onSelect}) {
     // debugger;
     let doc = new DomParser().parseFromString(content, 'text/html');
     let imgUrl = '';
     let img = doc.getElementsByTagName('img');
     if (img) imgUrl = img[0].attributes[1].value;
-    let date = moment('2020-03-29T16:40:01-04:00').format('DD MMM YYYY');
+    let date = moment(updated).format('DD MMM YYYY');
     console.log(date);
     return (
       <View
         style={{
           width: screenWidth,
-          height: 300,
+          height: 350,
           flexDirection: 'column',
           marginLeft: 10,
           marginRight: 10,
@@ -56,7 +56,13 @@ export default () => {
             width: screenWidth,
             backgroundColor: 'rgba(1, 1, 1,1)',
           }}>
-          <Text style={{color: 'red', margin: 6, alignSelf: 'flex-end'}}>
+          <Text
+            style={{
+              color: 'grey',
+              margin: 6,
+              alignSelf: 'flex-end',
+              paddingRight: 10,
+            }}>
             {date}
           </Text>
         </View>
@@ -70,8 +76,18 @@ export default () => {
             backgroundColor: 'rgba(1, 1, 1,1)',
             alignSelf: 'flex-end',
           }}>
-          <Text style={{color: 'white', fontSize: 20, margin: 6}}>{title}</Text>
-          <Text style={{color: 'yellow', margin: 6}}>{'#Subtitle'}</Text>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 20,
+              margin: 6,
+              paddingRight: 10,
+              fontFamily: 'Impact Charcoal, Times New Roman',
+              fontWeight: 'bold',
+            }}>
+            {title}
+          </Text>
+          <Text style={{color: 'yellow', margin: 6}}>{'#PIN'}</Text>
         </View>
       </View>
     );
@@ -82,7 +98,12 @@ export default () => {
       <FlatList
         data={feed}
         renderItem={({item}) => (
-          <CardView id={item.id} title={item.title} content={item.content} />
+          <CardView
+            id={item.id}
+            title={item.title}
+            content={item.content}
+            updated={item.updated}
+          />
         )}
         keyExtractor={item => item.id}
       />
