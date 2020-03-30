@@ -3,12 +3,16 @@ import {
   FlatList,
   Text,
   View,
-  TouchableOpacity,
+  Dimensions,
   StyleSheet,
   Image,
 } from 'react-native';
 import {NativeModules} from 'react-native';
 let contentProvider = NativeModules.ContentProvider;
+let DomParser = require('react-native-html-parser').DOMParser;
+const screenWidth = Dimensions.get('window').width;
+
+let moment = require('moment');
 
 export default () => {
   let [loading, setLoading] = useState(true);
@@ -28,21 +32,46 @@ export default () => {
     );
   }, []);
 
-  function CardView({id, title, selected, onSelect}) {
+  function CardView({id, title, content, selected, onSelect}) {
+    // debugger;
+    let doc = new DomParser().parseFromString(content, 'text/html');
+    let imgUrl = '';
+    let img = doc.getElementsByTagName('img');
+    if (img) imgUrl = img[0].attributes[1].value;
+    let date = moment('2020-03-29T16:40:01-04:00').format('DD MMM YYYY');
+    console.log(date);
     return (
-      <View style={{width: 200, height: 200, flexDirection: 'row', margin: 24}}>
-        <Image
-          style={{width: 200, height: 200, position: 'absolute'}}
-          source={{uri: 'https://www.dike.lib.ia.us/images/sample-1.jpg/image'}}
-        />
+      <View
+        style={{
+          width: screenWidth,
+          height: 300,
+          flexDirection: 'column',
+          marginLeft: 10,
+          marginRight: 10,
+          marginBottom: 54,
+        }}>
         <View
           style={{
             flex: 1,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            width: screenWidth,
+            backgroundColor: 'rgba(1, 1, 1,1)',
+          }}>
+          <Text style={{color: 'red', margin: 6, alignSelf: 'flex-end'}}>
+            {date}
+          </Text>
+        </View>
+        <Image
+          style={{flex: 3, width: screenWidth, height: 200}}
+          source={{uri: imgUrl}}
+        />
+        <View
+          style={{
+            flex: 2,
+            backgroundColor: 'rgba(1, 1, 1,1)',
             alignSelf: 'flex-end',
           }}>
           <Text style={{color: 'white', fontSize: 20, margin: 6}}>{title}</Text>
-          <Text style={{color: 'white', margin: 6}}>{'Subtitle'}</Text>
+          <Text style={{color: 'yellow', margin: 6}}>{'#Subtitle'}</Text>
         </View>
       </View>
     );
@@ -52,7 +81,9 @@ export default () => {
     <>
       <FlatList
         data={feed}
-        renderItem={({item}) => <CardView id={item._id} title={item.title} />}
+        renderItem={({item}) => (
+          <CardView id={item.id} title={item.title} content={item.content} />
+        )}
         keyExtractor={item => item.id}
       />
     </>
