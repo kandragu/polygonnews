@@ -10,19 +10,21 @@ import React, {useEffect} from 'react';
 import {SafeAreaView, StatusBar} from 'react-native';
 
 import NewFeed from './screens/NewFeed';
+import Navigation from './config/Navigation';
 
 import {NativeModules} from 'react-native';
 let contentProvider = NativeModules.ContentProvider;
 
-const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <NewFeed />
-      </SafeAreaView>
-    </>
-  );
-};
+// const App: () => React$Node = () => {
+//   return (
+//     <>
+//       <StatusBar barStyle="dark-content" />
+//       <SafeAreaView>
+//         <NewFeed />
+//       </SafeAreaView>
+//     </>
+//   );
+// };
 
-export default App;
+export default () => <Navigation />;
+// export default App;
